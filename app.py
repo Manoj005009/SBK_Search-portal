@@ -1,18 +1,8 @@
 import os
+import psycopg2
 from flask import Flask, render_template, request
-import mysql.connector
 
 app = Flask(__name__)
-
-# ✅ Database Connection using Environment Variables
-db = mysql.connector.connect(
-    host=os.environ.get("DB_HOST"),
-    user=os.environ.get("DB_USER"),
-    password=os.environ.get("DB_PASSWORD"),
-    database=os.environ.get("DB_NAME")
-)
-
-cursor = db.cursor(dictionary=True)
 
 # 🔥 TOKEN → CONTENT Mapping
 token_content = {
@@ -33,6 +23,15 @@ token_content = {
     15: "POWER SAVING TECHNIQUES IN COMPUTERS",
 }
 
+def get_db_connection():
+    return psycopg2.connect(
+        host=os.environ.get("DB_HOST"),
+        port=os.environ.get("DB_PORT"),  # 🔥 important
+        database=os.environ.get("DB_NAME"),
+        user=os.environ.get("DB_USER"),
+        password=os.environ.get("DB_PASSWORD")
+    )
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -44,14 +43,25 @@ def search():
     if not user_id:
         return render_template("result.html", user=None)
 
-    cursor.execute("SELECT * FROM users WHERE user_id = %s", (user_id,))
-    user = cursor.fetchone()
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
 
-    if user:
-        token = user.get("token")
-        user["content"] = token_content.get(token, "No Content Assigned")
+        cursor.execute("SELECT * FROM users WHERE user_id = %s", (user_id,))
+        row = cursor.fetchone()
 
-    return render_template("result.html", user=user)
+        user = None
+        if row:
+            columns = [desc[0] for desc in cursor.description]
+            user = dict(zip(columns, row))
 
+            token = user.get("token")
+            user["content"] = token_content.get(token, "No Content Assigned")
 
-# ❌ No app.run() needed (Gunicorn will handle it)
+        cursor.close()
+        conn.close()
+
+        return render_template("result.html", user=user)
+
+    except Exception as e:
+        return f"Database Error: {e}"
