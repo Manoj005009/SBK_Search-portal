@@ -23,18 +23,20 @@ token_content = {
     15: "POWER SAVING TECHNIQUES IN COMPUTERS",
 }
 
+# ✅ Use DATABASE_URL (Render Best Practice)
 def get_db_connection():
-    return psycopg2.connect(
-        host=os.environ.get("DB_HOST"),
-        port=os.environ.get("DB_PORT"),  # 🔥 important
-        database=os.environ.get("DB_NAME"),
-        user=os.environ.get("DB_USER"),
-        password=os.environ.get("DB_PASSWORD")
-    )
+    database_url = os.environ.get("postgresql://manoj:vp4dhRnC0WriAnBjbaSLHNCuyRla58lR@dpg-d69rl4ur433s73d84e60-a/sbk_3m7v")
+
+    if not database_url:
+        raise Exception("DATABASE_URL is missing in Render Environment!")
+
+    return psycopg2.connect(database_url)
+
 
 @app.route("/")
 def home():
     return render_template("index.html")
+
 
 @app.route("/search")
 def search():
