@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SEARCH PORTAL</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #3b82f6, #1e3a8a);
+}
+
+.container {
+    text-align: center;
+    width: 100%;
+}
+
+h1 {
+    color: white;
+    font-size: 48px;
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+}
+
+/* 🔥 FIXED SEARCH WRAPPER */
+.search-wrapper {
+    width: 450px;
+    margin: 0 auto; /* perfect center */
+    position: relative;
+}
+
+/* Input */
+.search-wrapper input {
+    width: 100%;
+    padding: 18px 130px 18px 25px;
+    border-radius: 50px;
+    border: none;
+    outline: none;
+    font-size: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    box-sizing: border-box; /* IMPORTANT FIX */
+}
+
+/* Button */
+.search-wrapper button {
+    position: absolute;
+    right: 6px;  /* tight to right */
+    top: 50%;
+    transform: translateY(-50%);
+    height: 42px;
+    padding: 0 28px;
+    border-radius: 40px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.search-wrapper button:hover {
+    background: #1d4ed8;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .search-wrapper {
+        width: 85%;
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>SEARCH YOUR CONTENT</h1>
+
+    <form action="/search" method="GET">
+        <div class="search-wrapper">
+            <input type="text" name="query" placeholder="Enter your LOT NAME...!!" required>
+            <button type="submit">Search</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
