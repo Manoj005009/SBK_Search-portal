@@ -25,14 +25,12 @@ token_content = {
 
 # ✅ Use DATABASE_URL (Render Best Practice)
 def get_db_connection():
-    database_url = os.environ.get("postgresql://manoj:vp4dhRnC0WriAnBjbaSLHNCuyRla58lR@dpg-d69rl4ur433s73d84e60-a/sbk_3m7v")
+    database_url = os.environ.get("DATABASE_URL")  # ✅ correct key name
 
     if not database_url:
         raise Exception("DATABASE_URL is missing in Render Environment!")
 
     return psycopg2.connect(database_url)
-
-
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -67,3 +65,4 @@ def search():
 
     except Exception as e:
         return f"Database Error: {e}"
+
